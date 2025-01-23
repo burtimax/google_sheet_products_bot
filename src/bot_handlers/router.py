@@ -46,7 +46,7 @@ async def handle_next_key_button(message: Message):
     data = google_sheet_client.get_data()
     key_index = data.active_key
     key_index = (key_index + 1) % (len(data.keys) + 1)
-    data.active_key = key_index
+    data.active_key = 1 if key_index==0 else key_index
     google_sheet_client.set_data(data)
 
     await message.answer(
