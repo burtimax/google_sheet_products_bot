@@ -1,7 +1,8 @@
 from huggingface_hub import InferenceClient
+from src.env import HF_TOKEN
 
 def main():
-    client = InferenceClient(api_key="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")
+    client = InferenceClient(api_key=HF_TOKEN)
 
     messages = [
         { "role": "system", "content": "Привет, как дела\n" },

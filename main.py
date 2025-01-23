@@ -34,14 +34,18 @@ async def global_error_handler(event: ErrorEvent):
 
 # MAIN
 async def main() -> None:
-    # Initialize Bot instance with default bot properties which will be passed to all API calls
-    bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-    dp.include_router(router_handlers)
+    while True:
+        try:
+            # Initialize Bot instance with default bot properties which will be passed to all API calls
+            bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
+            dp.include_router(router_handlers)
 
-    task1 = dp.start_polling(bot)
-    task2 = BackgroundTask.task_job()
-    await asyncio.gather(task2, task1)
-
+            task1 = dp.start_polling(bot)
+            task2 = BackgroundTask.task_job()
+            await asyncio.gather(task2, task1)
+        except Exception as e:
+            print(e)
+        finally: pass
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, stream=sys.stdout)
