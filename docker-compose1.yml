@@ -1,0 +1,14 @@
+version: "3.8"
+
+services:
+  python_bot:
+    build: .  # Собираем образ из Dockerfile
+    ports:
+      - "5000:25011"  # Пробрасываем порт 25011 на хост
+    volumes:
+      - .:/app  # Монтируем текущую директорию в контейнер (для разработки)
+    environment: # Устанавливаем переменные окружения
+      - BOT_TOKEN=TOKEN
+      - GOOGLE_CREDS_JSON_PATH=config.json
+      - GOOGLE_SHEET_NAME=name
+      - HF_TOKEN=hf-TOKEN
