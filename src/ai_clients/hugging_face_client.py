@@ -1,9 +1,9 @@
 from huggingface_hub import InferenceClient
-from src.env import HF_TOKEN
+from src.env import HF_TOKEN, HF_LLM_MODEL
 
 class HuggingFaceClient:
 
-    def get_product_ai_description(self, api_key, model, role, product_info) -> str:
+    def get_product_ai_description(self, api_key, model, role, product_info) -> (bool, str):
 
         client = InferenceClient(api_key=HF_TOKEN)
         messages = [
@@ -13,15 +13,15 @@ class HuggingFaceClient:
 
         try:
             completion = client.chat.completions.create(
-                model="Qwen/Qwen2.5-72B-Instruct",
+                model=HF_LLM_MODEL,
                 messages=messages,
                 temperature=0.5,
                 max_tokens=1024,
                 top_p=0.3
             )
-            return completion.choices[0].message.content
+            return (True, completion.choices[0].message.content)
         except Exception as e:
-            raise e
+            return (False, str(e))
 
 
 gpt_client = HuggingFaceClient()

@@ -38,7 +38,8 @@ async def main() -> None:
         try:
             # Initialize Bot instance with default bot properties which will be passed to all API calls
             bot = Bot(token=BOT_TOKEN, default=DefaultBotProperties(parse_mode=ParseMode.HTML))
-            dp.include_router(router_handlers)
+            if len(dp.sub_routers) == 0:
+                dp.include_router(router_handlers)
 
             task1 = dp.start_polling(bot)
             task2 = BackgroundTask.task_job()

@@ -11,6 +11,7 @@ class SheetModel:
     active_key: int
     keys: List[str]
     prompt: str
+    products_short_info: List[str]
     products_info: List[str]
 
     def to_json(self) -> str:
