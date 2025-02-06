@@ -18,7 +18,7 @@ def generate_product_description(product_name, features):
     prompt = f"Напиши краткое и привлекательное описание для продукта {product_name}. Удели особое внимание следующим характеристикам: {', '.join(features)}."
 
     client = OpenAI(api_key=API_KEY)
-    response = client.chat.completions.create(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Hello world"}])
+    response = client.chat.completions.create(model="gpt-4o", messages=[{"role": "user", "content": "Hello world"}])
 
     return response.choices[0].text.strip()
 

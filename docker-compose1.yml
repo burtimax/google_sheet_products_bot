@@ -3,6 +3,11 @@ version: "3.8"
 services:
   python_bot:
     build: .  # Собираем образ из Dockerfile
+    restart: unless-stopped
+    logging:
+      options:
+        max-size: "200k"
+        max-file: "10"
     ports:
       - "5000:25011"  # Пробрасываем порт 25011 на хост
     volumes:
@@ -10,5 +15,6 @@ services:
     environment: # Устанавливаем переменные окружения
       - BOT_TOKEN=TOKEN
       - GOOGLE_CREDS_JSON_PATH=config.json
-      - GOOGLE_SHEET_NAME=name
+      - GOOGLE_SHEET_ID=id_sheet
       - HF_TOKEN=hf-TOKEN
+      - HF_LLM_MODEL=model_name

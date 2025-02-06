@@ -1,6 +1,6 @@
 import asyncio
 from src.google_sheet_client import google_sheet_client
-from src.ai_clients.hugging_face_client import HuggingFaceClient
+from src.ai_clients.chat_gpt_client import ChatGPTClient
 from src.notification_service import Notify
 
 is_running = False
@@ -15,11 +15,12 @@ class BackgroundTask:
             if not is_running:
                 await asyncio.sleep(1)
                 continue
-            try:
-                data = google_sheet_client.update_data()
-                ai = HuggingFaceClient()
-                i = 1
-                while i < len(data.products_info) and is_running:
+
+            data = google_sheet_client.update_data()
+            ai = ChatGPTClient()
+            i = 1
+            while i < len(data.products_info) and is_running:
+                try:
                     if (not data.products_info[i].strip()
                             and not data.products_short_info[i].strip()):
                         i += 1
@@ -33,8 +34,8 @@ class BackgroundTask:
 
 
                     print(f"Обработка товара {i}: {prod_info}")
-                    result, prod_ai_desc = ai.get_product_ai_description(data.keys[data.active_key - 1], data.gpt_model,
-                                                                 data.prompt, prod_info)
+                    #result, prod_ai_desc = ai.get_product_ai_description(data.keys[data.active_key - 1], data.gpt_model, data.prompt, prod_info)
+                    result, prod_ai_desc = ai.get_product_ai_description(data.prompt, prod_info)
 
                     if not result:
                         raise Exception(prod_ai_desc)
@@ -46,12 +47,12 @@ class BackgroundTask:
                         google_sheet_client.add_prompt_to_history()
                     await asyncio.sleep(data.timeout_sec)
                     i += 1
-            except Exception as e:
-                await Notify(google_sheet_client.get_data().admin_username, str(e))
-                await asyncio.sleep(data.timeout_sec)
-            finally:
-                if is_running:
-                    await BackgroundTask.stop()
+                except Exception as e:
+                    await Notify(google_sheet_client.get_data().admin_username, str(e))
+                    await asyncio.sleep(data.timeout_sec)
+
+            if is_running:
+                await BackgroundTask.stop()
 
     # Функция для запуска планировщика
     @staticmethod
