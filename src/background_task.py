@@ -19,15 +19,16 @@ class BackgroundTask:
             data = google_sheet_client.update_data()
             ai = ChatGPTClient()
             i = 1
-            while i < len(data.products_info) and is_running:
+            max_index = max(len(data.products_info), len(data.products_short_info))
+            while i < max_index and is_running:
                 try:
-                    if (not data.products_info[i].strip()
+                    if ((i >= len(data.products_info) or not data.products_info[i].strip())
                             and not data.products_short_info[i].strip()):
                         i += 1
                         continue
 
-                    prod_info = data.products_info[i]
-                    if not data.products_info[i].strip() or len(data.products_info[i]) < 5:
+                    prod_info =  data.products_info[i] if i < len(data.products_info) else data.products_short_info[i]
+                    if i >= len(data.products_info or not data.products_info[i].strip()):
                         prod_info = data.products_short_info[i]
 
                     data = google_sheet_client.get_data()
