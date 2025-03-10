@@ -27,7 +27,7 @@ class BackgroundTask:
                         continue
 
                     prod_info = data.products_info[i]
-                    if not data.products_info[i].strip():
+                    if not data.products_info[i].strip() or len(data.products_info[i]) < 5:
                         prod_info = data.products_short_info[i]
 
                     data = google_sheet_client.get_data()
